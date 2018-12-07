@@ -1,0 +1,42 @@
+version: '3'
+services:
+  jobs:
+    image: node:10.4
+    command: node app/jobs.js
+    volumes:
+      - .:/app
+    depends_on:
+      - rabbit
+  publisher:
+    image: node:10.4
+    command: node app/publisher.js
+    volumes:
+        - .:/app
+    depends_on:
+      - rabbit
+  worker1:
+    image: node:10.4
+    command: node app/worker.js 1
+    volumes:
+        - .:/app
+    depends_on:
+      - rabbit
+  worker2:
+    image: node:10.4
+    command: node app/worker.js 2
+    volumes:
+     - .:/app
+    depends_on:
+      - rabbit
+  worker3:
+    image: node:10.4
+    command: node app/worker.js 3
+    volumes:
+     - .:/app
+    depends_on:
+      - rabbit
+  rabbit:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq'
+    ports:
+      - 15672:15672
